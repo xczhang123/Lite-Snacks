@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JSON.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment2</a> &gt; <a href="index.source.html" class="el_package">assignment2.backend</a> &gt; <span class="el_source">JSON.java</span></div><h1>JSON.java</h1><pre class="source lang-java linenums">package assignment2.backend;
+
+import java.util.List;
+import java.util.ArrayList;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class JSON {
+
+    private JSONArray jsonArray;
+    private List&lt;Card&gt; cards;
+
+<span class="fc" id="L20">    public JSON() {</span>
+<span class="fc" id="L21">        JSONParser jsonParser = new JSONParser();</span>
+<span class="fc" id="L22">        String fileName = &quot;src/main/resources/credit_cards.json&quot;;</span>
+<span class="fc" id="L23">        cards = new ArrayList&lt;Card&gt;();</span>
+<span class="fc" id="L24">        try (FileReader reader = new FileReader(fileName)) {</span>
+            // Read JSON file;
+<span class="fc" id="L26">            Object obj = jsonParser.parse(reader);</span>
+
+            // JSON object to read fields
+<span class="fc" id="L29">            JSONArray jsonArray = (JSONArray) obj;</span>
+<span class="fc" id="L30">            jsonArray.forEach(card -&gt; parseCardObject((JSONObject) card));</span>
+<span class="nc" id="L31">        } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L32">            e.printStackTrace();</span>
+<span class="nc" id="L33">        } catch (IOException e) {</span>
+<span class="nc" id="L34">            e.printStackTrace();</span>
+<span class="nc" id="L35">        } catch (ParseException e) {</span>
+<span class="nc" id="L36">            e.printStackTrace();</span>
+<span class="pc" id="L37">        }</span>
+<span class="fc" id="L38">    }</span>
+
+    public Card validate(String name, String number) {
+<span class="fc" id="L41">        boolean status = false;</span>
+        // JSONArray array = jsonObject.getJSONArray(0);
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        for (int i = 0; i &lt; cards.size(); i++) {</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">            if (cards.get(i).getName().equals(name)) {</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">                if (cards.get(i).getNum().equals(number)) {</span>
+<span class="fc" id="L46">                    status = true;</span>
+<span class="fc" id="L47">                    break;</span>
+                }
+            }
+        }
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (status == true) {</span>
+<span class="fc" id="L52">            Card card = new Card(name, number);</span>
+<span class="fc" id="L53">            return card;</span>
+        } else {
+<span class="fc" id="L55">            return null;</span>
+        }
+
+    }
+
+    private void parseCardObject(JSONObject card) {
+<span class="fc" id="L61">        String name = (String) card.get(&quot;name&quot;);</span>
+<span class="fc" id="L62">        String num = (String) card.get(&quot;number&quot;);</span>
+<span class="fc" id="L63">        cards.add(new Card(name, num));</span>
+<span class="fc" id="L64">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

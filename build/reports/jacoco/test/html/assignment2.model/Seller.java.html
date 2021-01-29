@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Seller.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment2</a> &gt; <a href="index.source.html" class="el_package">assignment2.model</a> &gt; <span class="el_source">Seller.java</span></div><h1>Seller.java</h1><pre class="source lang-java linenums">package assignment2.model;
+
+import static org.junit.Assert.assertTrue;
+
+import assignment2.backend.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+
+import assignment2.App;
+import assignment2.controller.SellerEditDialogController;
+import assignment2.controller.SellerOverviewController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+/*
+    As a seller, I wish to inspect the current inventory, so that I can fill/modify the item details correctly.
+
+    Level of satisfaction:
+    - Correctly display the right amount of goods in the inventory.
+    - Able to fill in the existing goods
+    - Able to modify the item details
+    - Able to generate a summary that includes items codes, item names and the total number of quantity sold for each item (e.g. &quot;1001; Mineral Water; 12&quot;, &quot;1002; Mars; 1&quot;, etc.).
+*/
+public class Seller {
+
+    private static BorderPane LoggedInRootLayout;
+    /**
+     * The data as an observable list of Persons.
+     */
+<span class="nc" id="L40">    private static ObservableList&lt;Snack&gt; itemData = FXCollections.observableArrayList();</span>
+
+    /**
+     * Constructor
+     */
+<span class="nc" id="L45">    public Seller() {</span>
+<span class="nc" id="L46">        itemData.clear();</span>
+<span class="nc" id="L47">        itemData.addAll(SnackDB.view(&quot;Drinks&quot;));</span>
+<span class="nc" id="L48">        itemData.addAll(SnackDB.view(&quot;Chocolates&quot;));</span>
+<span class="nc" id="L49">        itemData.addAll(SnackDB.view(&quot;Chips&quot;));</span>
+<span class="nc" id="L50">        itemData.addAll(SnackDB.view(&quot;Candies&quot;));</span>
+<span class="nc" id="L51">    }</span>
+
+    /**
+     * Returns the data as an observable list of Persons.
+     *
+     * @return
+     */
+    public ObservableList&lt;Snack&gt; getItemData() {
+<span class="nc" id="L59">        return itemData;</span>
+    }
+
+    /**
+     * Initializes the root layout.
+     */
+    public void initRootLayout() {
+        try {
+<span class="nc" id="L67">            FXMLLoader loader = new FXMLLoader();</span>
+            // Load root layout from fxml file.
+<span class="nc" id="L69">            loader.setLocation(App.class.getResource(&quot;/fxml/SellerRootLayout.fxml&quot;));</span>
+<span class="nc" id="L70">            LoggedInRootLayout = (BorderPane) loader.load();</span>
+
+            // Show the scene containing the root layout.
+<span class="nc" id="L73">            Scene scene = new Scene(LoggedInRootLayout);</span>
+<span class="nc" id="L74">            App.getPrimaryStage().setScene(scene);</span>
+<span class="nc" id="L75">        } catch (IOException e) {</span>
+<span class="nc" id="L76">            e.printStackTrace();</span>
+<span class="nc" id="L77">        }</span>
+<span class="nc" id="L78">    }</span>
+
+    /**
+     * Shows the item overview inside the root layout.
+     */
+    public void showItemOverview() {
+        try {
+            // Load person overview.
+<span class="nc" id="L86">            FXMLLoader loader = new FXMLLoader();</span>
+<span class="nc" id="L87">            loader.setLocation(App.class.getResource(&quot;/fxml/SellerOverview.fxml&quot;));</span>
+<span class="nc" id="L88">            AnchorPane itemOverview = (AnchorPane) loader.load();</span>
+
+            // Set person overview into the center of root layout.
+<span class="nc" id="L91">            LoggedInRootLayout.setCenter(itemOverview);</span>
+
+            // Give the controller access to the main app.
+<span class="nc" id="L94">            SellerOverviewController controller = loader.getController();</span>
+<span class="nc" id="L95">            controller.setSeller(this);</span>
+<span class="nc" id="L96">            controller.setMainApp(itemData);</span>
+
+<span class="nc" id="L98">        } catch (IOException e) {</span>
+<span class="nc" id="L99">            e.printStackTrace();</span>
+<span class="nc" id="L100">        }</span>
+<span class="nc" id="L101">    }</span>
+
+    /**
+     * Opens a dialog to edit details for the specified item. If the user clicks
+     * OK, the changes are saved into the provided item object and true is
+     * returned.
+     *
+     * @param item the item object to be edited
+     * @return true if the user clicked OK, false otherwise.
+     */
+    public boolean showItemEditDialog(Snack item) {
+        try {
+            // Load the fxml file and create a new stage for the popup dialog.
+<span class="nc" id="L114">            FXMLLoader loader = new FXMLLoader();</span>
+<span class="nc" id="L115">            loader.setLocation(App.class.getResource(&quot;/fxml/SellerEditDialog.fxml&quot;));</span>
+<span class="nc" id="L116">            AnchorPane page = (AnchorPane) loader.load();</span>
+
+            // Create the dialog Stage.
+<span class="nc" id="L119">            Stage dialogStage = new Stage();</span>
+<span class="nc" id="L120">            dialogStage.setTitle(&quot;Edit Item&quot;);</span>
+<span class="nc" id="L121">            dialogStage.initModality(Modality.WINDOW_MODAL);</span>
+<span class="nc" id="L122">            dialogStage.initOwner(App.getPrimaryStage());</span>
+<span class="nc" id="L123">            Scene scene = new Scene(page);</span>
+<span class="nc" id="L124">            dialogStage.setScene(scene);</span>
+
+            // Set the item into the controller.
+<span class="nc" id="L127">            SellerEditDialogController controller = loader.getController();</span>
+<span class="nc" id="L128">            controller.setDialogStage(dialogStage);</span>
+<span class="nc" id="L129">            controller.setItem(item);</span>
+
+            // Show the dialog and wait until the user closes it
+<span class="nc" id="L132">            dialogStage.showAndWait();</span>
+
+<span class="nc" id="L134">            return controller.isOkClicked();</span>
+<span class="nc" id="L135">        } catch (IOException e) {</span>
+<span class="nc" id="L136">            e.printStackTrace();</span>
+<span class="nc" id="L137">            return false;</span>
+        }
+    }
+
+    public static void generate_item_summary() {
+<span class="nc" id="L142">        File csvOutputFile = new File(&quot;summary/item_summary&quot;);</span>
+
+<span class="nc" id="L144">        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {</span>
+<span class="nc" id="L145">            pw.println(&quot;code,name,category,quantity,price&quot;);</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">            for (Snack snack : itemData) {</span>
+<span class="nc" id="L147">                pw.println(snack); // Override toString() method in the Snack class</span>
+<span class="nc" id="L148">            }</span>
+<span class="nc" id="L149">        } catch (FileNotFoundException e) {}</span>
+<span class="nc" id="L150">        assertTrue(csvOutputFile.exists());</span>
+<span class="nc" id="L151">    }</span>
+
+    public static void generate_sold_item_summary() {
+<span class="nc" id="L154">        File csvOutputFile = new File(&quot;summary/item_sold_summary&quot;);</span>
+
+<span class="nc" id="L156">        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {</span>
+<span class="nc" id="L157">            pw.println(&quot;code,name,number_sold&quot;);</span>
+<span class="nc" id="L158">            HashMap&lt;Snack, String&gt; map = TransactionDB.getAllSoldSnack();</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">            for (Snack snack : map.keySet()) {</span>
+<span class="nc" id="L160">                String s = &quot;&quot; + Integer.toString(snack.getCode()) + &quot;,&quot; + snack.getName() + &quot;,&quot; + map.get(snack);</span>
+<span class="nc" id="L161">                pw.println(s);</span>
+<span class="nc" id="L162">            }</span>
+<span class="nc" id="L163">        } catch (FileNotFoundException e) {}</span>
+<span class="nc" id="L164">        assertTrue(csvOutputFile.exists());</span>
+<span class="nc" id="L165">    }</span>
+
+    public static void logout() {
+        try {
+<span class="nc" id="L169">            FXMLLoader loader = new FXMLLoader();</span>
+
+            // Load login page from fxml file.
+<span class="nc" id="L172">            loader.setLocation(App.class.getResource(&quot;/fxml/login.fxml&quot;));</span>
+<span class="nc" id="L173">            AnchorPane layout = (AnchorPane) loader.load();</span>
+
+<span class="nc" id="L175">            Scene scene = new Scene(layout);</span>
+<span class="nc" id="L176">            App.getPrimaryStage().setScene(scene);</span>
+<span class="nc" id="L177">        } catch (Exception e) {} </span>
+<span class="nc" id="L178">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

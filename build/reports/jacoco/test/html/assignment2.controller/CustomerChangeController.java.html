@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerChangeController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment2</a> &gt; <a href="index.source.html" class="el_package">assignment2.controller</a> &gt; <span class="el_source">CustomerChangeController.java</span></div><h1>CustomerChangeController.java</h1><pre class="source lang-java linenums">package assignment2.controller;
+
+import assignment2.App;
+import assignment2.model.*;
+import assignment2.backend.*;
+
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
+
+<span class="nc" id="L18">public class CustomerChangeController {</span>
+
+    @FXML
+    private Label fifty;
+
+    @FXML
+    private Label twenty;
+
+    @FXML
+    private Label ten;
+
+    @FXML
+    private Label five;
+
+    @FXML
+    private Label two;
+
+    @FXML
+    private Label one;
+
+    @FXML
+    private Label fiftycents;
+
+    @FXML
+    private Label twentycents;
+
+    @FXML
+    private Label tencents;
+
+    Customer customer;
+  
+    public void setCustomer(Customer customer) {
+<span class="nc" id="L50">        this.customer = customer;</span>
+        
+
+<span class="nc" id="L53">        fiftycents.setText(String.format(&quot;%d&quot;, customer.change_type.get(&quot;0.5&quot;)));</span>
+<span class="nc" id="L54">        twentycents.setText(String.format(&quot;%d&quot;, customer.change_type.get(&quot;0.2&quot;)));</span>
+<span class="nc" id="L55">        tencents.setText(String.format(&quot;%d&quot;, customer.change_type.get(&quot;0.1&quot;)));</span>
+<span class="nc" id="L56">        one.setText(String.format(&quot;%d&quot;, customer.change_type.get(&quot;1&quot;)));</span>
+<span class="nc" id="L57">        two.setText(String.format(&quot;%d&quot;, customer.change_type.get(&quot;2&quot;)));</span>
+<span class="nc" id="L58">        five.setText(String.format(&quot;%d&quot;, customer.change_type.get(&quot;5&quot;)));</span>
+<span class="nc" id="L59">        ten.setText(String.format(&quot;%d&quot;, customer.change_type.get(&quot;10&quot;)));</span>
+<span class="nc" id="L60">        twenty.setText(String.format(&quot;%d&quot;, customer.change_type.get(&quot;20&quot;)));</span>
+<span class="nc" id="L61">        fifty.setText(String.format(&quot;%d&quot;, customer.change_type.get(&quot;50&quot;)));</span>
+
+        // Quick fix by Eric - 17/11/2020
+<span class="nc" id="L64">        customer.complete_transaction();</span>
+
+<span class="nc" id="L66">        this.customer.total_price = 0;</span>
+<span class="nc" id="L67">        this.customer.reset();</span>
+
+<span class="nc" id="L69">    }</span>
+
+    @FXML
+    void handleFinish(ActionEvent event) {
+<span class="nc" id="L73">      customer.initRootLayout();</span>
+<span class="nc" id="L74">      customer.showItemOverview();</span>
+<span class="nc" id="L75">    }</span>
+
+    @FXML
+    void handleLogout(ActionEvent event) {
+<span class="nc" id="L79">      this.customer.logout();</span>
+<span class="nc" id="L80">    }</span>
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

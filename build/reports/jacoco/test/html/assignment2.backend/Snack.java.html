@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Snack.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment2</a> &gt; <a href="index.source.html" class="el_package">assignment2.backend</a> &gt; <span class="el_source">Snack.java</span></div><h1>Snack.java</h1><pre class="source lang-java linenums">package assignment2.backend;
+
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.scene.image.Image;
+
+public class Snack {
+
+    /* Primary information displayed on the LHS */
+    private StringProperty name;
+    private FloatProperty price;
+    private IntegerProperty quantity;
+
+    /* Detailed infomarion displayed on the RHS */
+    private StringProperty category;
+    private IntegerProperty code;
+
+    /* Non-displayed, cannot be changed */
+    private final IntegerProperty rollno;
+
+    /* Image for the snack to be displayed */
+    private Image snackImage;
+
+    /*
+        Primary info
+    */
+<span class="fc" id="L31">    public Snack(int rollno) {</span>
+<span class="fc" id="L32">        this.name = new SimpleStringProperty();</span>
+<span class="fc" id="L33">        this.price = new SimpleFloatProperty();</span>
+<span class="fc" id="L34">        this.quantity = new SimpleIntegerProperty();</span>
+<span class="fc" id="L35">        this.category = new SimpleStringProperty();</span>
+<span class="fc" id="L36">        this.code = new SimpleIntegerProperty();</span>
+<span class="fc" id="L37">        this.rollno = new SimpleIntegerProperty(rollno);</span>
+<span class="fc" id="L38">        this.snackImage = null;</span>
+<span class="fc" id="L39">	}</span>
+
+    /**
+     * Construtor
+     * @param rollno    Primary key
+     * @param name
+     * @param category
+     * @param quantity
+     * @param price
+     * @param code
+     */
+<span class="fc" id="L50">    public Snack(int rollno, String name, String category, int quantity, float price, int code, String imageURL) {</span>
+<span class="fc" id="L51">        this.name = new SimpleStringProperty(name);</span>
+<span class="fc" id="L52">        this.price = new SimpleFloatProperty(price);</span>
+<span class="fc" id="L53">        this.quantity = new SimpleIntegerProperty(quantity);</span>
+
+<span class="fc" id="L55">        this.category = new SimpleStringProperty(category);</span>
+<span class="fc" id="L56">        this.code = new SimpleIntegerProperty(code);</span>
+
+<span class="fc" id="L58">        this.rollno = new SimpleIntegerProperty(rollno);</span>
+
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        if (imageURL.equals(&quot;&quot;)){</span>
+<span class="fc" id="L61">          this.snackImage = null;</span>
+        }else{
+<span class="nc" id="L63">          this.snackImage = new Image(imageURL);</span>
+        }
+<span class="fc" id="L65">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L69">        return Integer.toString(getCode()) + ',' + getName() + ',' + getCategory() + ',' + getQuantity() + ',' + getPrice();</span>
+    }
+
+	public String getName() {
+<span class="fc" id="L73">        return name.get();</span>
+    }
+
+    public void setName(String name) {
+<span class="fc" id="L77">        this.name.set(name);</span>
+<span class="fc" id="L78">    }</span>
+
+    public Image getImage() {
+<span class="nc" id="L81">        return this.snackImage;</span>
+    }
+
+    public void setImage(String imageURL) {
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">        if (imageURL.equals(&quot;&quot;)){</span>
+<span class="fc" id="L86">          this.snackImage = null;</span>
+        }else{
+<span class="nc" id="L88">          this.snackImage = new Image(imageURL);</span>
+        }
+<span class="fc" id="L90">    }</span>
+
+    public StringProperty nameProperty() {
+<span class="fc" id="L93">        return name;</span>
+    }
+
+    public float getPrice() {
+<span class="fc" id="L97">        return price.get();</span>
+    }
+
+    public void setPrice(float price) {
+<span class="fc" id="L101">        this.price.set(price);</span>
+<span class="fc" id="L102">    }</span>
+
+    public FloatProperty priceProperty() {
+<span class="fc" id="L105">        return this.price;</span>
+    }
+
+    public int getQuantity() {
+<span class="fc" id="L109">        return this.quantity.get();</span>
+    }
+
+    public void setQuantity(int quantity) {
+<span class="fc" id="L113">        this.quantity.set(quantity);</span>
+<span class="fc" id="L114">    }</span>
+
+    public IntegerProperty quantityProperty() {
+<span class="fc" id="L117">        return quantity;</span>
+    }
+
+    /*
+        Detailed info
+    */
+
+    public String getCategory() {
+<span class="fc" id="L125">        return this.category.get();</span>
+    }
+
+    public void setCategory(String category) {
+<span class="fc" id="L129">        this.category.set(category);</span>
+<span class="fc" id="L130">    }</span>
+
+    public StringProperty categoryProperty() {
+<span class="fc" id="L133">        return this.category;</span>
+    }
+
+    public int getCode() {
+<span class="fc" id="L137">        return code.get();</span>
+    }
+
+    public void setCode(int code) {
+<span class="fc" id="L141">        this.code.set(code);</span>
+<span class="fc" id="L142">    }</span>
+
+    public IntegerProperty codeProperty() {
+<span class="fc" id="L145">        return code;</span>
+    }
+
+    public int getRollno() {
+<span class="fc" id="L149">        return rollno.get();</span>
+    }
+
+    public IntegerProperty rollnoProperty() {
+<span class="fc" id="L153">        return rollno;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

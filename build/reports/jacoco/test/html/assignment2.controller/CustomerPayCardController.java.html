@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerPayCardController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment2</a> &gt; <a href="index.source.html" class="el_package">assignment2.controller</a> &gt; <span class="el_source">CustomerPayCardController.java</span></div><h1>CustomerPayCardController.java</h1><pre class="source lang-java linenums">package assignment2.controller;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import assignment2.App;
+import assignment2.model.*;
+import assignment2.backend.*;
+
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.ImageView;
+
+<span class="nc" id="L26">public class CustomerPayCardController {</span>
+
+    @FXML
+    private TextField pay_amount;
+
+    @FXML
+    void handleContinue(ActionEvent event) {
+<span class="nc" id="L33">        this.customer.timer_reset();</span>
+        
+<span class="nc" id="L35">        int status = customer.is_card_saved();</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        if (status == 0) { //Failed</span>
+<span class="nc" id="L37">            customer.initRootLayout();</span>
+<span class="nc" id="L38">            customer.showItemOverview();</span>
+<span class="nc" id="L39">            User user = customer.getUser();</span>
+<span class="nc" id="L40">            TransactionDB.addCancelledTransaction(</span>
+<span class="nc" id="L41">                    new Transaction(new Timestamp(System.currentTimeMillis())</span>
+                    ,&quot;Failed&quot;, user, &quot;Wrong card&quot;));
+<span class="nc" id="L43">        } else { //Success</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">            if (status == 1) {</span>
+<span class="nc" id="L45">                Alert alert = new Alert(AlertType.INFORMATION);</span>
+<span class="nc" id="L46">                alert.initOwner(App.getPrimaryStage());</span>
+<span class="nc" id="L47">                alert.setTitle(&quot;Success&quot;);</span>
+<span class="nc" id="L48">                alert.setHeaderText(&quot;Card accepted but not saved, require re-enter next time&quot;);</span>
+<span class="nc" id="L49">                alert.setContentText(&quot;Processing payment...&quot;);</span>
+<span class="nc" id="L50">                alert.showAndWait();</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">            } else if (status == 2) {</span>
+<span class="nc" id="L52">                Alert alert = new Alert(AlertType.INFORMATION);</span>
+<span class="nc" id="L53">                alert.initOwner(App.getPrimaryStage());</span>
+<span class="nc" id="L54">                alert.setTitle(&quot;Success&quot;);</span>
+<span class="nc" id="L55">                alert.setHeaderText(&quot;Card saved!&quot;);</span>
+<span class="nc" id="L56">                alert.setContentText(&quot;Processing payment...&quot;);</span>
+<span class="nc" id="L57">                alert.showAndWait();</span>
+            }
+            
+            // Record the changes in the database
+<span class="nc" id="L61">            HashMap&lt;Snack, String&gt; map = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">            for (Snack snack : customer.getItemBought()) {</span>
+<span class="nc" id="L63">                map.put(snack, String.valueOf(snack.getQuantity()));</span>
+<span class="nc" id="L64">            }</span>
+            
+<span class="nc" id="L66">            TransactionDB.addValidTransaction(</span>
+                new Transaction(
+<span class="nc" id="L68">                    new Timestamp(System.currentTimeMillis()),</span>
+<span class="nc" id="L69">                    &quot;Success&quot;, customer.getUser(), &quot;Card&quot;, (double)customer.total_price, 0.0, map</span>
+                )
+            );
+
+            // pay all the money
+<span class="nc" id="L74">            customer.total_price = 0.0f;</span>
+            //redirect customer to the payment success page
+<span class="nc" id="L76">            customer.check_enough();</span>
+        }
+<span class="nc" id="L78">    }</span>
+
+    @FXML
+    void handleBack(ActionEvent event) {
+<span class="nc" id="L82">        this.customer.timer_stop();</span>
+        // Hard coded fix to restore to previous stage after cancellation
+<span class="nc" id="L84">        Customer tempCustomer = new Customer(customer.getUser());</span>
+<span class="nc" id="L85">        tempCustomer.initRootLayout();</span>
+<span class="nc" id="L86">        tempCustomer.showItemOverview();</span>
+
+        //Add reasons to the database
+<span class="nc" id="L89">        TransactionDB.addCancelledTransaction(</span>
+<span class="nc" id="L90">            new Transaction(new Timestamp(System.currentTimeMillis())</span>
+<span class="nc" id="L91">            ,&quot;Failed&quot;, customer.getUser(), &quot;Cancelled&quot;));</span>
+<span class="nc" id="L92">    }   </span>
+
+    Customer customer;
+
+    public void setCustomer(Customer customer) {
+<span class="nc" id="L97">        this.customer = customer;</span>
+<span class="nc" id="L98">        pay_amount.setText(String.format(&quot;%.01f&quot;, customer.get_unpaid()));</span>
+<span class="nc" id="L99">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

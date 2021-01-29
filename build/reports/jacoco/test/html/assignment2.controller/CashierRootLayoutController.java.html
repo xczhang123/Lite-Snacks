@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CashierRootLayoutController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment2</a> &gt; <a href="index.source.html" class="el_package">assignment2.controller</a> &gt; <span class="el_source">CashierRootLayoutController.java</span></div><h1>CashierRootLayoutController.java</h1><pre class="source lang-java linenums">package assignment2.controller;
+
+import assignment2.model.*;
+import assignment2.App;
+import assignment2.backend.*;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.AnchorPane;
+
+
+<span class="nc" id="L16">public class CashierRootLayoutController {</span>
+    @FXML
+    void handle_click_change_summary(ActionEvent event) {
+<span class="nc" id="L19">        Cashier.generate_available_change_summary();</span>
+<span class="nc" id="L20">        Alert alert = new Alert(AlertType.INFORMATION);</span>
+<span class="nc" id="L21">        alert.setContentText(&quot;Available change summary generated.&quot;);</span>
+<span class="nc" id="L22">        alert.showAndWait();</span>
+<span class="nc" id="L23">    }</span>
+
+    @FXML
+    void handle_click_valid_transaction_summary(ActionEvent event) {
+<span class="nc" id="L27">        Cashier.generate_valid_transaction_summary();</span>
+<span class="nc" id="L28">        Alert alert = new Alert(AlertType.INFORMATION);</span>
+<span class="nc" id="L29">        alert.setContentText(&quot;Valid transaction summary generated.&quot;);</span>
+<span class="nc" id="L30">        alert.showAndWait();</span>
+<span class="nc" id="L31">    }</span>
+
+    @FXML
+    void handle_logout(ActionEvent event) throws Exception {
+<span class="nc" id="L35">        Cashier.logout();</span>
+<span class="nc" id="L36">    }</span>
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

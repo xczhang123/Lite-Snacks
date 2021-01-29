@@ -1,0 +1,10 @@
+assignment2/SnackTest.java
+ assignment2.SnackTest
+assignment2/UserTest.java
+ assignment2.UserTest
+assignment2/CashTest.java
+ assignment2.CashTest
+assignment2/TransactionTest.java
+ assignment2.TransactionTest
+assignment2/ModelTest.java
+ assignment2.ModelTest

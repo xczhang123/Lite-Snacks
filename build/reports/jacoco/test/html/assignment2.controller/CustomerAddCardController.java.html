@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerAddCardController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment2</a> &gt; <a href="index.source.html" class="el_package">assignment2.controller</a> &gt; <span class="el_source">CustomerAddCardController.java</span></div><h1>CustomerAddCardController.java</h1><pre class="source lang-java linenums">package assignment2.controller;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import assignment2.model.*;
+import assignment2.backend.*;
+
+/**
+ * Dialog to add details of a user.
+ */
+<span class="nc" id="L15">public class CustomerAddCardController {</span>
+
+    @FXML
+    private TextField nameField;
+    @FXML
+    private TextField numberField;
+
+    private Stage dialogStage;
+    private Customer customer;
+<span class="nc" id="L24">    private boolean okClicked = false;</span>
+
+    /**
+     * Initializes the controller class. This method is automatically called
+     * after the fxml file has been loaded.
+     */
+    @FXML
+    private void initialize() {
+<span class="nc" id="L32">    }</span>
+
+    /**
+     * Sets the stage of this dialog.
+     *
+     * @param dialogStage
+     */
+    public void setDialogStage(Stage dialogStage) {
+<span class="nc" id="L40">        this.dialogStage = dialogStage;</span>
+<span class="nc" id="L41">    }</span>
+
+    /**
+     * Returns true if the user clicked OK, false otherwise.
+     *
+     * @return
+     */
+    public boolean isOkClicked() {
+<span class="nc" id="L49">        return okClicked;</span>
+    }
+
+    /**
+     * Called when the user clicks ok.
+     */
+    @FXML
+    private void handleOk() {
+<span class="nc" id="L57">        this.customer.timer_reset();</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (isInputValid()) {</span>
+<span class="nc" id="L59">            okClicked = true;</span>
+<span class="nc" id="L60">            dialogStage.close();</span>
+        }
+<span class="nc" id="L62">    }</span>
+
+    /**
+     * Called when the user clicks okSave.
+     */
+    @FXML
+    private void handleOkSave() {
+<span class="nc" id="L69">        this.customer.timer_reset();</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (isInputValid()) {</span>
+<span class="nc" id="L71">            Card card = new Card(nameField.getText(), numberField.getText());</span>
+<span class="nc" id="L72">            System.out.println(card.getName() + &quot;, &quot; + card.getNum());</span>
+<span class="nc" id="L73">            UserDB.addCard(card, customer.getUser());</span>
+<span class="nc" id="L74">            okClicked = true;</span>
+<span class="nc" id="L75">            dialogStage.close();</span>
+        }
+<span class="nc" id="L77">    }</span>
+
+    /**
+     * Called when the user clicks cancel.
+     */
+    @FXML
+    private void handleCancel() {
+<span class="nc" id="L84">        this.customer.timer_reset();</span>
+<span class="nc" id="L85">        dialogStage.close();</span>
+<span class="nc" id="L86">    }</span>
+
+    /**
+     * Validates the user input in the text fields.
+     *
+     * @return true if the input is valid
+     */
+    private boolean isInputValid() {
+        // Validate card details
+<span class="nc" id="L95">        JSON json = new JSON();</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (json.validate(nameField.getText(), numberField.getText()) != null) {</span>
+<span class="nc" id="L97">            return true;</span>
+        } else {
+            // Show the error message.
+<span class="nc" id="L100">            Alert alert = new Alert(AlertType.ERROR);</span>
+<span class="nc" id="L101">            alert.initOwner(dialogStage);</span>
+<span class="nc" id="L102">            alert.setTitle(&quot;Error&quot;);</span>
+<span class="nc" id="L103">            alert.setHeaderText(&quot;Please correct invalid fields&quot;);</span>
+<span class="nc" id="L104">            alert.setContentText(&quot;Invalid card name or number&quot;);</span>
+
+<span class="nc" id="L106">            alert.showAndWait();</span>
+
+<span class="nc" id="L108">            return false;</span>
+        }
+    }
+
+    public void setCustomer(Customer customer) {
+<span class="nc" id="L113">        this.customer = customer;</span>
+<span class="nc" id="L114">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

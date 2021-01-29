@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="assignment2.controller.OwnerRootLayoutController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handle_click_item_summary" text="Item summary" />
+                  <MenuItem mnemonicParsing="false" onAction="#handle_click_sold_item_summary" text="Item sold summary" />
+                  <MenuItem mnemonicParsing="false" onAction="#handle_click_change_summary" text="Change summary" />
+                  <MenuItem mnemonicParsing="false" onAction="#handle_click_valid_transaction_summary" text="Valid transaction summary" />
+              <MenuItem mnemonicParsing="false" onAction="#handle_click_username_role_summary" text="Username role summary" />
+                  <MenuItem mnemonicParsing="false" onAction="#handle_click_cancelled_transaction_summary" text="Cancelled transaction summary" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="View">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#switch_to_seller_view" text="Seller view" />
+                  <MenuItem mnemonicParsing="false" onAction="#switch_to_cashier_view" text="Cashier view" />
+                  <MenuItem mnemonicParsing="false" onAction="#switch_to_owner_view" text="Owner view" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Logout">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handle_logout" text="Logout" />
+               </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+</BorderPane>

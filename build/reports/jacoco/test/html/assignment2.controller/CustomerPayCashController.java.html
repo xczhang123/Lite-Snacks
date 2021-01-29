@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerPayCashController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment2</a> &gt; <a href="index.source.html" class="el_package">assignment2.controller</a> &gt; <span class="el_source">CustomerPayCashController.java</span></div><h1>CustomerPayCashController.java</h1><pre class="source lang-java linenums">package assignment2.controller;
+
+import assignment2.App;
+import assignment2.model.*;
+import assignment2.backend.*;
+
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.ImageView;
+<span class="nc" id="L20">public class CustomerPayCashController {</span>
+
+    @FXML
+    private TextField pay_amount;
+
+    // Change display format by Eric - 15/11 6pm
+
+    @FXML
+    void fifty(ActionEvent event) {
+<span class="nc" id="L29">        this.customer.timer_reset();</span>
+<span class="nc" id="L30">        customer.add_balance((float) 50);</span>
+<span class="nc" id="L31">        pay_amount.setText(String.format(&quot;%.01f&quot;, customer.get_unpaid()));</span>
+<span class="nc" id="L32">        customer.cash_type.put(&quot;50&quot;,customer.cash_type.get(&quot;50&quot;) + 1);</span>
+<span class="nc" id="L33">    }</span>
+
+    @FXML
+    void fiftycents(ActionEvent event) {
+<span class="nc" id="L37">        this.customer.timer_reset();</span>
+<span class="nc" id="L38">        customer.add_balance((float) 0.5);</span>
+<span class="nc" id="L39">        pay_amount.setText(String.format(&quot;%.01f&quot;, customer.get_unpaid()));</span>
+<span class="nc" id="L40">        customer.cash_type.put(&quot;0.5&quot;,customer.cash_type.get(&quot;0.5&quot;) + 1);</span>
+<span class="nc" id="L41">    }</span>
+
+    @FXML
+    void five(ActionEvent event) {
+<span class="nc" id="L45">        this.customer.timer_reset();</span>
+<span class="nc" id="L46">        customer.add_balance((float) 5);</span>
+<span class="nc" id="L47">        pay_amount.setText(String.format(&quot;%.01f&quot;, customer.get_unpaid()));</span>
+<span class="nc" id="L48">        customer.cash_type.put(&quot;5&quot;,customer.cash_type.get(&quot;5&quot;) + 1);</span>
+<span class="nc" id="L49">    }</span>
+
+    @FXML
+    void handleContinue(ActionEvent event) {
+<span class="nc" id="L53">        this.customer.timer_reset();</span>
+<span class="nc" id="L54">        customer.check_enough();</span>
+<span class="nc" id="L55">    }</span>
+
+    @FXML
+    void handleLogout(ActionEvent event) {
+<span class="nc" id="L59">        this.customer.timer_reset();</span>
+<span class="nc" id="L60">        this.customer.logout();</span>
+<span class="nc" id="L61">    }</span>
+
+    @FXML
+    void handleCancel(ActionEvent event) {
+<span class="nc" id="L65">        this.customer.timer_stop();</span>
+<span class="nc" id="L66">        Customer tempCustomer = new Customer(customer.getUser());</span>
+<span class="nc" id="L67">        tempCustomer.cancel_transaction(&quot;stopped&quot;);</span>
+<span class="nc" id="L68">        tempCustomer.initRootLayout();</span>
+<span class="nc" id="L69">        tempCustomer.showItemOverview();</span>
+<span class="nc" id="L70">    }</span>
+
+    @FXML
+    void one(ActionEvent event) {
+<span class="nc" id="L74">        this.customer.timer_reset();</span>
+<span class="nc" id="L75">        customer.add_balance((float) 1);</span>
+<span class="nc" id="L76">        pay_amount.setText(String.format(&quot;%.01f&quot;, customer.get_unpaid()));</span>
+<span class="nc" id="L77">        customer.cash_type.put(&quot;1&quot;,customer.cash_type.get(&quot;1&quot;) + 1);</span>
+<span class="nc" id="L78">    }</span>
+
+    @FXML
+    void ten(ActionEvent event) {
+<span class="nc" id="L82">        this.customer.timer_reset();</span>
+<span class="nc" id="L83">        customer.add_balance((float) 10);</span>
+<span class="nc" id="L84">        pay_amount.setText(String.format(&quot;%.01f&quot;, customer.get_unpaid()));</span>
+<span class="nc" id="L85">        customer.cash_type.put(&quot;10&quot;,customer.cash_type.get(&quot;10&quot;) + 1);</span>
+<span class="nc" id="L86">    }</span>
+
+    @FXML
+    void tencents(ActionEvent event) {
+<span class="nc" id="L90">        this.customer.timer_reset();</span>
+<span class="nc" id="L91">        customer.add_balance((float) 0.1);</span>
+<span class="nc" id="L92">        pay_amount.setText(String.format(&quot;%.01f&quot;, customer.get_unpaid()));</span>
+<span class="nc" id="L93">        customer.cash_type.put(&quot;0.1&quot;,customer.cash_type.get(&quot;0.1&quot;) + 1);</span>
+<span class="nc" id="L94">    }</span>
+
+    @FXML
+    void twenty(ActionEvent event) {
+<span class="nc" id="L98">        this.customer.timer_reset();</span>
+<span class="nc" id="L99">        customer.add_balance((float) 20);</span>
+<span class="nc" id="L100">        pay_amount.setText(String.format(&quot;%.01f&quot;, customer.get_unpaid()));</span>
+<span class="nc" id="L101">        customer.cash_type.put(&quot;20&quot;,customer.cash_type.get(&quot;20&quot;) + 1);</span>
+<span class="nc" id="L102">    }</span>
+
+    @FXML
+    void twentycents(ActionEvent event) {
+<span class="nc" id="L106">        this.customer.timer_reset();</span>
+<span class="nc" id="L107">        customer.add_balance((float) 0.2);</span>
+<span class="nc" id="L108">        pay_amount.setText(String.format(&quot;%.01f&quot;, customer.get_unpaid()));</span>
+<span class="nc" id="L109">        customer.cash_type.put(&quot;0.2.&quot;,customer.cash_type.get(&quot;0.2&quot;) + 1);</span>
+<span class="nc" id="L110">    }</span>
+
+    @FXML
+    void two(ActionEvent event) {
+<span class="nc" id="L114">        this.customer.timer_reset();</span>
+<span class="nc" id="L115">        customer.add_balance((float) 2);</span>
+<span class="nc" id="L116">        pay_amount.setText(String.format(&quot;%.01f&quot;, customer.get_unpaid()));</span>
+<span class="nc" id="L117">        customer.cash_type.put(&quot;2&quot;,customer.cash_type.get(&quot;2&quot;) + 1);</span>
+<span class="nc" id="L118">    }</span>
+    Customer customer;
+    public void setCustomer(Customer customer) {
+<span class="nc" id="L121">        this.customer = customer;</span>
+<span class="nc" id="L122">        pay_amount.setText(String.format(&quot;%.01f&quot;, customer.get_unpaid()));</span>
+<span class="nc" id="L123">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

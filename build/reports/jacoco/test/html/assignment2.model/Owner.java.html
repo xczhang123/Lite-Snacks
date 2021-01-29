@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Owner.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment2</a> &gt; <a href="index.source.html" class="el_package">assignment2.model</a> &gt; <span class="el_source">Owner.java</span></div><h1>Owner.java</h1><pre class="source lang-java linenums">package assignment2.model;
+
+import static org.junit.Assert.assertTrue;
+
+import assignment2.backend.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+import assignment2.App;
+import assignment2.controller.CashierOverviewController;
+import assignment2.controller.OwnerEditDialogController;
+import assignment2.controller.OwnerOverviewController;
+import assignment2.controller.SellerOverviewController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+public class Owner {
+
+    private static BorderPane LoggedInRootLayout;
+
+<span class="nc" id="L34">    private static ObservableList&lt;Snack&gt; snackData = FXCollections.observableArrayList();</span>
+<span class="nc" id="L35">    private static ObservableList&lt;Cash&gt; cashData = FXCollections.observableArrayList();</span>
+<span class="nc" id="L36">    private static ObservableList&lt;User&gt; userData = FXCollections.observableArrayList();</span>
+
+<span class="nc" id="L38">    public Owner() {</span>
+
+        // Make sure we don't fetch the same data over and over
+<span class="nc" id="L41">        snackData.clear();</span>
+<span class="nc" id="L42">        cashData.clear();</span>
+<span class="nc" id="L43">        userData.clear();</span>
+        /**
+         * Initialize seller data
+         */
+<span class="nc" id="L47">        snackData.addAll(SnackDB.view(&quot;Drinks&quot;));</span>
+<span class="nc" id="L48">        snackData.addAll(SnackDB.view(&quot;Chocolates&quot;));</span>
+<span class="nc" id="L49">        snackData.addAll(SnackDB.view(&quot;Chips&quot;));</span>
+<span class="nc" id="L50">        snackData.addAll(SnackDB.view(&quot;Candies&quot;));</span>
+
+        /**
+         * Initialize cashier data
+         */
+<span class="nc" id="L55">        List&lt;String&gt; values = new ArrayList&lt;&gt;(Arrays.asList(&quot;50&quot;, &quot;20&quot;, &quot;10&quot;, &quot;5&quot;, &quot;2&quot;, &quot;1&quot;, &quot;0.5&quot;, &quot;0.2&quot;, &quot;0.1&quot;));</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        for (String price : values) {</span>
+<span class="nc" id="L57">            cashData.addAll(new Cash(price, CashDB.getQuantity(price)));</span>
+<span class="nc" id="L58">        }</span>
+
+        /**
+         * Initialize owner data
+         */
+<span class="nc" id="L63">        userData.addAll(UserDB.getUsernameType());</span>
+
+<span class="nc" id="L65">    }</span>
+
+    public ObservableList&lt;User&gt; getUserData() {
+<span class="nc" id="L68">        return userData;</span>
+    }
+
+    /**
+     * Initializes the root layout.
+     */
+    public void initRootLayout() {
+        try {
+<span class="nc" id="L76">            FXMLLoader loader = new FXMLLoader();</span>
+            // Load root layout from fxml file.
+<span class="nc" id="L78">            loader.setLocation(App.class.getResource(&quot;/fxml/OwnerRootLayout.fxml&quot;));</span>
+<span class="nc" id="L79">            LoggedInRootLayout = (BorderPane) loader.load();</span>
+
+            // Show the scene containing the root layout.
+<span class="nc" id="L82">            Scene scene = new Scene(LoggedInRootLayout);</span>
+<span class="nc" id="L83">            App.getPrimaryStage().setScene(scene);</span>
+<span class="nc" id="L84">        } catch (IOException e) {</span>
+<span class="nc" id="L85">            e.printStackTrace();</span>
+<span class="nc" id="L86">        }</span>
+<span class="nc" id="L87">    }</span>
+
+    public void showOwnerItemOverview() {
+        try {
+            // Load person overview.
+<span class="nc" id="L92">            FXMLLoader loader = new FXMLLoader();</span>
+<span class="nc" id="L93">            loader.setLocation(App.class.getResource(&quot;/fxml/OwnerOverview.fxml&quot;));</span>
+<span class="nc" id="L94">            AnchorPane itemOverview = (AnchorPane) loader.load();</span>
+
+            // Set person overview into the center of root layout.
+<span class="nc" id="L97">            LoggedInRootLayout.setCenter(itemOverview);</span>
+
+            // Give the controller access to the main app.
+<span class="nc" id="L100">            OwnerOverviewController controller = loader.getController();</span>
+<span class="nc" id="L101">            controller.setOwner(this);</span>
+
+<span class="nc" id="L103">            controller.setMainApp(userData);</span>
+
+<span class="nc" id="L105">        } catch (IOException e) {</span>
+<span class="nc" id="L106">            e.printStackTrace();</span>
+<span class="nc" id="L107">        }</span>
+<span class="nc" id="L108">    }</span>
+
+    /**
+     * Add a new user. If the user clicks
+     * OK, the changes are saved into the provided item object and true is
+     * returned.
+     *
+     * @param user the item object to be edited
+     * @return true if the user clicked OK, false otherwise.
+     */
+    public boolean showOwnerEditDialog(User user) {
+        try {
+            // Load the fxml file and create a new stage for the popup dialog.
+<span class="nc" id="L121">            FXMLLoader loader = new FXMLLoader();</span>
+<span class="nc" id="L122">            loader.setLocation(App.class.getResource(&quot;/fxml/OwnerEditDialog.fxml&quot;));</span>
+<span class="nc" id="L123">            AnchorPane page = (AnchorPane) loader.load();</span>
+
+            // Create the dialog Stage.
+<span class="nc" id="L126">            Stage dialogStage = new Stage();</span>
+<span class="nc" id="L127">            dialogStage.setTitle(&quot;Add User&quot;);</span>
+<span class="nc" id="L128">            dialogStage.initModality(Modality.WINDOW_MODAL);</span>
+<span class="nc" id="L129">            dialogStage.initOwner(App.getPrimaryStage());</span>
+<span class="nc" id="L130">            Scene scene = new Scene(page);</span>
+<span class="nc" id="L131">            dialogStage.setScene(scene);</span>
+
+            // Set the item into the controller.
+<span class="nc" id="L134">            OwnerEditDialogController controller = loader.getController();</span>
+<span class="nc" id="L135">            controller.setDialogStage(dialogStage);</span>
+<span class="nc" id="L136">            controller.setItem(user);</span>
+
+            // Show the dialog and wait until the user closes it
+<span class="nc" id="L139">            dialogStage.showAndWait();</span>
+
+<span class="nc" id="L141">            return controller.isOkClicked();</span>
+<span class="nc" id="L142">        } catch (IOException e) {</span>
+<span class="nc" id="L143">            e.printStackTrace();</span>
+<span class="nc" id="L144">            return false;</span>
+        }
+    }
+
+    /**
+     * Shows the item overview of seller inside the root layout.
+     */
+    public void showSellerItemOverview() {
+        try {
+            // Load person overview.
+<span class="nc" id="L154">            FXMLLoader loader = new FXMLLoader();</span>
+<span class="nc" id="L155">            loader.setLocation(App.class.getResource(&quot;/fxml/SellerOverview.fxml&quot;));</span>
+<span class="nc" id="L156">            AnchorPane itemOverview = (AnchorPane) loader.load();</span>
+
+            // Set person overview into the center of root layout.
+<span class="nc" id="L159">            LoggedInRootLayout.setCenter(itemOverview);</span>
+
+            // Give the controller access to the main app.
+<span class="nc" id="L162">            SellerOverviewController controller = loader.getController();</span>
+<span class="nc" id="L163">            controller.setSeller(new Seller());</span>
+
+<span class="nc" id="L165">            controller.setMainApp(snackData);</span>
+
+<span class="nc" id="L167">        } catch (IOException e) {</span>
+<span class="nc" id="L168">            e.printStackTrace();</span>
+<span class="nc" id="L169">        }</span>
+<span class="nc" id="L170">    }</span>
+
+    /**
+     * Shows the item overview of cashier inside the root layout.
+     */
+    public void showCashierItemOverview() {
+        try {
+            // Load person overview.
+<span class="nc" id="L178">            FXMLLoader loader = new FXMLLoader();</span>
+<span class="nc" id="L179">            loader.setLocation(App.class.getResource(&quot;/fxml/CashierOverview.fxml&quot;));</span>
+<span class="nc" id="L180">            AnchorPane itemOverview = (AnchorPane) loader.load();</span>
+
+            // Set person overview into the center of root layout.
+<span class="nc" id="L183">            LoggedInRootLayout.setCenter(itemOverview);</span>
+
+            // Give the controller access to the main app.
+<span class="nc" id="L186">            CashierOverviewController controller = loader.getController();</span>
+<span class="nc" id="L187">            controller.setCashier(new Cashier());</span>
+
+<span class="nc" id="L189">            controller.setMainApp(cashData);</span>
+
+<span class="nc" id="L191">        } catch (IOException e) {</span>
+<span class="nc" id="L192">            e.printStackTrace();</span>
+<span class="nc" id="L193">        }</span>
+<span class="nc" id="L194">    }</span>
+
+    /**
+     * Summary of all usernames and their role
+     */
+    public static void generate_username_role_summary() {
+<span class="nc" id="L200">        File csvOutputFile = new File(&quot;summary/username_role_summary&quot;);</span>
+
+<span class="nc" id="L202">        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {</span>
+<span class="nc" id="L203">            pw.println(&quot;username,type&quot;);</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">            for (User user : userData) {</span>
+<span class="nc" id="L205">                pw.println(user); // Override toString() method in the Cash class</span>
+<span class="nc" id="L206">            }</span>
+<span class="nc" id="L207">        } catch (FileNotFoundException e) {}</span>
+<span class="nc" id="L208">        assertTrue(csvOutputFile.exists());</span>
+<span class="nc" id="L209">    }</span>
+
+    /**
+     * Summary of cancelled transaction
+     */
+    public static void generate_cancelled_transaction_summary() {
+<span class="nc" id="L215">        File csvOutputFile = new File(&quot;summary/cancelled_transaction_summary&quot;);</span>
+
+<span class="nc" id="L217">        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {</span>
+<span class="nc" id="L218">            pw.println(&quot;transaction_id,time,user_id,reason&quot;);</span>
+<span class="nc" id="L219">            List&lt;Transaction&gt; transactions = TransactionDB.getCancelledTransaction();</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">            for (Transaction tran : transactions) {</span>
+<span class="nc" id="L221">                pw.println(tran.toStringCancelled());</span>
+<span class="nc" id="L222">            }</span>
+
+<span class="nc" id="L224">        } catch (FileNotFoundException e) {}</span>
+<span class="nc" id="L225">        assertTrue(csvOutputFile.exists());</span>
+<span class="nc" id="L226">	}</span>
+
+    /**
+     * Cashier Summary report
+     */
+    public static void generate_available_change_summary() {
+<span class="nc" id="L232">        File csvOutputFile = new File(&quot;summary/available_change_summary&quot;);</span>
+
+<span class="nc" id="L234">        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {</span>
+<span class="nc" id="L235">            pw.println(&quot;price,quantity&quot;);</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">            for (Cash Cash : cashData) {</span>
+<span class="nc" id="L237">                pw.println(Cash); // Override toString() method in the Cash class</span>
+<span class="nc" id="L238">            }</span>
+<span class="nc" id="L239">        } catch (FileNotFoundException e) {}</span>
+<span class="nc" id="L240">        assertTrue(csvOutputFile.exists());</span>
+<span class="nc" id="L241">    }</span>
+
+    public static void generate_valid_transaction_summary() {
+<span class="nc" id="L244">        File csvOutputFile = new File(&quot;summary/valid_transaction_summary&quot;);</span>
+
+<span class="nc" id="L246">        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {</span>
+<span class="nc" id="L247">            pw.println(&quot;transaction_id,time,user_id,payment,paid,change&quot;);</span>
+<span class="nc" id="L248">            pw.println(&quot;snack_id,snack_name,number_sold&quot;);</span>
+<span class="nc" id="L249">            List&lt;Transaction&gt; transactions = TransactionDB.getValidTransaction();</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">            for (Transaction tran : transactions) {</span>
+<span class="nc" id="L251">                pw.println(tran.toStringValid());</span>
+<span class="nc" id="L252">                pw.println(tran.toStringSnacks());</span>
+<span class="nc" id="L253">            }</span>
+
+<span class="nc" id="L255">        } catch (FileNotFoundException e) {}</span>
+<span class="nc" id="L256">        assertTrue(csvOutputFile.exists());</span>
+<span class="nc" id="L257">	}</span>
+
+     /**
+     * Seller Summary report
+     */
+    public static void generate_item_summary() {
+<span class="nc" id="L263">        File csvOutputFile = new File(&quot;summary/item_summary&quot;);</span>
+
+<span class="nc" id="L265">        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {</span>
+<span class="nc" id="L266">            pw.println(&quot;code,name,category,quantity,price&quot;);</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">            for (Snack snack : snackData) {</span>
+<span class="nc" id="L268">                pw.println(snack); // Override toString() method in the Snack class</span>
+<span class="nc" id="L269">            }</span>
+<span class="nc" id="L270">        } catch (FileNotFoundException e) {}</span>
+<span class="nc" id="L271">        assertTrue(csvOutputFile.exists());</span>
+<span class="nc" id="L272">    }</span>
+
+    public static void generate_sold_item_summary() {
+<span class="nc" id="L275">        File csvOutputFile = new File(&quot;summary/item_sold_summary&quot;);</span>
+
+<span class="nc" id="L277">        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {</span>
+<span class="nc" id="L278">            pw.println(&quot;code,name,number_sold&quot;);</span>
+<span class="nc" id="L279">            HashMap&lt;Snack, String&gt; map = TransactionDB.getAllSoldSnack();</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">            for (Snack snack : map.keySet()) {</span>
+<span class="nc" id="L281">                String s = &quot;&quot; + Integer.toString(snack.getCode()) + &quot;,&quot; + snack.getName() + &quot;,&quot; + map.get(snack);</span>
+<span class="nc" id="L282">                pw.println(s);</span>
+<span class="nc" id="L283">            }</span>
+<span class="nc" id="L284">        } catch (FileNotFoundException e) {}</span>
+<span class="nc" id="L285">        assertTrue(csvOutputFile.exists());</span>
+<span class="nc" id="L286">    }</span>
+
+	public static void logout() {
+        try {
+<span class="nc" id="L290">            FXMLLoader loader = new FXMLLoader();</span>
+
+            // Load login page from fxml file.
+<span class="nc" id="L293">            loader.setLocation(App.class.getResource(&quot;/fxml/login.fxml&quot;));</span>
+<span class="nc" id="L294">            AnchorPane layout = (AnchorPane) loader.load();</span>
+
+<span class="nc" id="L296">            Scene scene = new Scene(layout);</span>
+<span class="nc" id="L297">            App.getPrimaryStage().setScene(scene);</span>
+<span class="nc" id="L298">        } catch (Exception e) {} </span>
+<span class="nc" id="L299">	}</span>
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

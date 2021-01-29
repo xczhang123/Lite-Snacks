@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerOverviewController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment2</a> &gt; <a href="index.source.html" class="el_package">assignment2.controller</a> &gt; <span class="el_source">CustomerOverviewController.java</span></div><h1>CustomerOverviewController.java</h1><pre class="source lang-java linenums">package assignment2.controller;
+
+import java.sql.Timestamp;
+
+import assignment2.App;
+import assignment2.model.*;
+import assignment2.backend.*;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.ImageView;
+
+<span class="nc" id="L21">public class CustomerOverviewController {</span>
+
+    @FXML
+    private TableView&lt;Snack&gt; itemTable;
+    @FXML
+    private TableColumn&lt;Snack, String&gt; nameColumn;
+    @FXML
+    private TableColumn&lt;Snack, Float&gt; priceColumn;
+    @FXML
+    private TableColumn&lt;Snack, Integer&gt; quantityColumn;
+
+    @FXML
+    private Label nameLabel;
+    @FXML
+    private Label priceLabel;
+    @FXML
+    private Label quantityLabel;
+    @FXML
+    private Label categoryLabel;
+    @FXML
+    private Label codeLabel;
+    @FXML
+    private Label totalpricelabel;
+    @FXML
+    private ImageView snack_image;
+    private Label nameone;
+
+    @FXML
+    private Label quantityone;
+
+    @FXML
+    private Label name;
+
+    @FXML
+    private Label nametwo;
+
+    @FXML
+    private Label quantitytwo;
+
+    @FXML
+    private Label namethree;
+
+    @FXML
+    private Label quantitythree;
+
+    @FXML
+    private Label namefour;
+
+    @FXML
+    private Label quantityfour;
+
+    @FXML
+    private Label namefive;
+
+    @FXML
+    private Label quantityfive;
+
+    Customer customer;
+    Snack snack;
+
+    public void setCustomer(Customer customer) {
+<span class="nc" id="L82">        this.snack = null;</span>
+<span class="nc" id="L83">        this.customer = customer;</span>
+<span class="nc" id="L84">        name.setText(this.customer.getUser().getName());</span>
+<span class="nc" id="L85">        this.customer.play_timer();</span>
+<span class="nc" id="L86">    }</span>
+
+    public Snack get_snack(){
+<span class="nc" id="L89">        return this.snack;</span>
+    }
+    /**
+     * Updates each Cell in the price column to add a dollar sign to the front
+     */
+    public static class PriceTableCell&lt;S&gt; extends TableCell&lt;Snack, Float&gt; {
+
+<span class="nc" id="L96">        public PriceTableCell() {</span>
+<span class="nc" id="L97">            Label label = new Label(&quot;$&quot;);</span>
+<span class="nc" id="L98">            this.setAlignment(Pos.CENTER_LEFT);</span>
+<span class="nc" id="L99">            this.setGraphic(label);</span>
+<span class="nc" id="L100">        }</span>
+
+        @Override
+        protected void updateItem(Float item, boolean empty) {
+<span class="nc" id="L104">            super.updateItem(item, empty);</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">            if (empty) {</span>
+<span class="nc" id="L106">                setGraphic(null);</span>
+            } else {
+<span class="nc" id="L108">                this.setText(String.format(&quot;%.2f&quot;, item));</span>
+            }
+<span class="nc" id="L110">        }</span>
+    }
+
+    /**
+     * Initializes the controller class. This method is automatically called after
+     * the fxml file has been loaded.
+     */
+    @FXML
+    private void initialize() {
+        // Initialize the item table with the three columns.
+<span class="nc" id="L120">        nameColumn.setCellValueFactory(cellData -&gt; cellData.getValue().nameProperty());</span>
+<span class="nc" id="L121">        priceColumn.setCellValueFactory(cellData -&gt; cellData.getValue().priceProperty().asObject());</span>
+<span class="nc" id="L122">        quantityColumn.setCellValueFactory(cellData -&gt; cellData.getValue().quantityProperty().asObject());</span>
+        // Adds dollar sign to price column
+<span class="nc" id="L124">        priceColumn.setCellFactory(price -&gt; new PriceTableCell&lt;&gt;());</span>
+<span class="nc" id="L125">        totalpricelabel.setText(&quot;$0.00&quot;);</span>
+        // Clear item details.
+<span class="nc" id="L127">        showItemDetails(null);</span>
+
+        // Listen for selection changes and show the item primary details when changed.
+<span class="nc" id="L130">        itemTable.getSelectionModel().selectedItemProperty()</span>
+<span class="nc" id="L131">        .addListener((observable, oldValue, newValue) -&gt; showItemDetails(newValue));</span>
+<span class="nc" id="L132">    }</span>
+    
+    @FXML
+    void handlebuy(ActionEvent event) {
+<span class="nc" id="L136">        Snack selectedItem = itemTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc" id="L137">        this.customer.timer_reset();</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        if (selectedItem != null) {</span>
+<span class="nc" id="L139">            boolean okClicked = customer.showbuyDialog(selectedItem);</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            if (okClicked) {</span>
+<span class="nc" id="L141">                showItemDetails(selectedItem);</span>
+<span class="nc" id="L142">                totalpricelabel.setText(String.format(&quot;$%.2f&quot;, customer.total_price));</span>
+            }
+            
+<span class="nc" id="L145">        } else {</span>
+            // Nothing selected.
+<span class="nc" id="L147">            Alert alert = new Alert(AlertType.WARNING);</span>
+<span class="nc" id="L148">            alert.initOwner(App.getPrimaryStage());</span>
+<span class="nc" id="L149">            alert.setTitle(&quot;No Selection&quot;);</span>
+<span class="nc" id="L150">            alert.setHeaderText(&quot;No item Selected&quot;);</span>
+<span class="nc" id="L151">            alert.setContentText(&quot;Please select an item in the table.&quot;);</span>
+<span class="nc" id="L152">            alert.showAndWait();</span>
+        }
+<span class="nc" id="L154">    }</span>
+    
+    @FXML
+    void handle_recent(ActionEvent event) {
+<span class="nc" id="L158">        this.customer.timer_reset();</span>
+<span class="nc" id="L159">        customer.recent_method();</span>
+<span class="nc" id="L160">    }</span>
+
+    @FXML
+    void handlecheckout(ActionEvent event) {
+<span class="nc" id="L164">        this.customer.timer_reset();</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        if (totalpricelabel.getText() == &quot;$0.00&quot;) {</span>
+<span class="nc" id="L166">            Alert alert = new Alert(AlertType.WARNING);</span>
+<span class="nc" id="L167">            alert.initOwner(App.getPrimaryStage());</span>
+<span class="nc" id="L168">            alert.setTitle(&quot;Buy items&quot;);</span>
+<span class="nc" id="L169">            alert.setHeaderText(&quot;No item selected&quot;);</span>
+<span class="nc" id="L170">            alert.setContentText(&quot;Please buy something from the table before checking out&quot;);</span>
+<span class="nc" id="L171">            alert.showAndWait();</span>
+<span class="nc" id="L172">        } else {</span>
+<span class="nc" id="L173">            customer.pay_method();</span>
+        }
+<span class="nc" id="L175">    }</span>
+    
+    /**
+     * Fills all text fields to show details about the item. If the specified
+     * item is null, all text fields are cleared.
+     *
+     * @param item the item or null
+     */
+    private void showItemDetails(Snack item) {
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        if (item != null) {</span>
+            // Fill the labels with info from the item object.
+<span class="nc" id="L186">            codeLabel.setText(Integer.toString(item.getCode()));</span>
+<span class="nc" id="L187">            priceLabel.setText(&quot;$ &quot; + String.format(&quot;%.2f&quot;, item.getPrice()));</span>
+<span class="nc" id="L188">            quantityLabel.setText(Integer.toString(item.getQuantity()));</span>
+
+<span class="nc" id="L190">            nameLabel.setText(item.getName());</span>
+<span class="nc" id="L191">            categoryLabel.setText(item.getCategory());</span>
+<span class="nc" id="L192">            snack_image.setImage(item.getImage());</span>
+        } else {
+            // item is null, remove all the text.
+<span class="nc" id="L195">            codeLabel.setText(&quot;&quot;);</span>
+<span class="nc" id="L196">            priceLabel.setText(&quot;&quot;);</span>
+<span class="nc" id="L197">            quantityLabel.setText(&quot;&quot;);</span>
+
+<span class="nc" id="L199">            nameLabel.setText(&quot;&quot;);</span>
+<span class="nc" id="L200">            categoryLabel.setText(&quot;&quot;);</span>
+<span class="nc" id="L201">            snack_image.setImage(null);</span>
+        }
+<span class="nc" id="L203">    }</span>
+
+    /**
+     * Handles the category button
+     * @param event
+     */
+    @FXML
+    void handle_all(ActionEvent event) {
+<span class="nc" id="L211">        showItemDetails(null);</span>
+<span class="nc" id="L212">        ObservableList&lt;Snack&gt; snacks = SnackDB.view(&quot;&quot;);</span>
+<span class="nc" id="L213">        itemTable.setItems(snacks);</span>
+<span class="nc" id="L214">        itemTable.refresh();</span>
+<span class="nc" id="L215">        this.customer.timer_reset();</span>
+<span class="nc" id="L216">    }</span>
+    
+    /**
+     * Handles the category button
+     * @param event
+     */
+    @FXML
+    void handle_candies(ActionEvent event) {
+<span class="nc" id="L224">        showItemDetails(null);</span>
+<span class="nc" id="L225">        ObservableList&lt;Snack&gt; snacks = SnackDB.view(&quot;Candies&quot;);</span>
+<span class="nc" id="L226">        itemTable.setItems(snacks);</span>
+<span class="nc" id="L227">        itemTable.refresh();</span>
+<span class="nc" id="L228">        this.customer.timer_reset();</span>
+<span class="nc" id="L229">    }</span>
+    
+    /**
+     * Handles the category button
+     * @param event
+     */
+    @FXML
+    void handle_chips(ActionEvent event) {
+<span class="nc" id="L237">        showItemDetails(null);</span>
+<span class="nc" id="L238">        ObservableList&lt;Snack&gt; snacks = SnackDB.view(&quot;Chips&quot;);</span>
+<span class="nc" id="L239">        itemTable.setItems(snacks);</span>
+<span class="nc" id="L240">        itemTable.refresh();</span>
+<span class="nc" id="L241">        this.customer.timer_reset();</span>
+<span class="nc" id="L242">    }</span>
+
+    /**
+     * Handles the category button
+     * @param event
+     */
+    @FXML
+    void handle_chocolates(ActionEvent event) {
+<span class="nc" id="L250">        showItemDetails(null);</span>
+<span class="nc" id="L251">        ObservableList&lt;Snack&gt; snacks = SnackDB.view(&quot;Chocolates&quot;);</span>
+<span class="nc" id="L252">        itemTable.setItems(snacks);</span>
+<span class="nc" id="L253">        itemTable.refresh();</span>
+<span class="nc" id="L254">        this.customer.timer_reset();</span>
+<span class="nc" id="L255">    }</span>
+
+    /**
+     * Handles the category button
+     * @param event
+     */
+    @FXML
+    void handle_drinks(ActionEvent event) {
+<span class="nc" id="L263">        showItemDetails(null);</span>
+<span class="nc" id="L264">        ObservableList&lt;Snack&gt; snacks = SnackDB.view(&quot;Drinks&quot;);</span>
+<span class="nc" id="L265">        itemTable.setItems(snacks);</span>
+<span class="nc" id="L266">        itemTable.refresh();</span>
+<span class="nc" id="L267">        this.customer.timer_reset();</span>
+<span class="nc" id="L268">    }</span>
+
+    /**
+     * Is called by the main application to give a reference back to itself.
+     *
+     * @param mainApp
+     */
+    public void setMainApp(ObservableList&lt;Snack&gt; items) {
+<span class="nc" id="L276">        itemTable.setItems(items);</span>
+<span class="nc" id="L277">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

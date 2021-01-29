@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Transaction.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment2</a> &gt; <a href="index.source.html" class="el_package">assignment2.backend</a> &gt; <span class="el_source">Transaction.java</span></div><h1>Transaction.java</h1><pre class="source lang-java linenums">package assignment2.backend;
+
+import java.sql.Timestamp;
+import java.util.HashMap;
+
+public class Transaction {
+
+     /*
+     * These are basic attributes for all transactions
+     */
+    private Timestamp time;
+    private String status;
+    private int id;
+    private User user;
+
+     /**
+      * Attributes that are needed for cancelled transactions
+      */
+    private String reason;
+
+     /**
+      * Attributes that are needed for valid transactions
+      */
+    private String payment;
+    private double paid;
+    private double change;
+    private HashMap&lt;Snack,String&gt; snacks;
+
+
+     /**
+      * Constructor for cancelled Transactions to add new transaction(no id needed)
+      * basically init by classes in controller package
+      * and used as parameter to TransactionDB.java methods
+      *
+      * @param time current system time
+      * @param status cancelled or valid
+      * @param user
+      * @param reason why the transaction is cancelled
+      */
+<span class="fc" id="L40">    public Transaction(Timestamp time, String status, User user, String reason) {</span>
+<span class="fc" id="L41">        this.time = time;</span>
+<span class="fc" id="L42">        this.status = status;</span>
+<span class="fc" id="L43">        this.user = user;</span>
+<span class="fc" id="L44">        this.reason = reason;</span>
+<span class="fc" id="L45">    }</span>
+
+     /**
+      * Constructor for valid Transactions to add new transaction(no id needed)
+      * basically init by classes in controller package
+      * and used as parameter to TransactionDB.java methods
+      *
+      * @param time current system time
+      * @param status cancelled or valid
+      * @param user
+      * @param payment how this transaction is paid
+      * @param paid how much thses transacrion is paid(i.e. total amount of inserted cash)
+      * @param change probably 0 when using card
+      * @param snacks a hash map that use snack as key and its quantity as a string value
+      */
+<span class="fc" id="L60">    public Transaction(Timestamp time, String status, User user, String payment, double paid, double change, HashMap&lt;Snack,String&gt; snacks) {</span>
+<span class="fc" id="L61">        this.time = time;</span>
+<span class="fc" id="L62">        this.status = status;</span>
+<span class="fc" id="L63">        this.user = user;</span>
+<span class="fc" id="L64">        this.payment = payment;</span>
+<span class="fc" id="L65">        this.paid = paid;</span>
+<span class="fc" id="L66">        this.change = change;</span>
+<span class="fc" id="L67">        this.snacks = snacks;</span>
+<span class="fc" id="L68">    }</span>
+
+    /**
+     * Constructor for valid Transactions with id
+     * basically init and returned by methods in TransactionDB.java
+     * and used to print report
+     *
+     * @param id the id of the transaction
+     * @param time current system time
+     * @param status cancelled or valid
+     * @param user
+     * @param payment how this transaction is paid
+     * @param paid how much thses transacrion is paid(i.e. total amount of inserted cash)
+     * @param change probably 0 when using card
+     * @param snacks a hash map that use snack as key and its quantity as a string value
+     */
+<span class="fc" id="L84">    public Transaction(int id, Timestamp time, String status, User user, String payment, double paid, double change, HashMap&lt;Snack,String&gt; snacks) {</span>
+<span class="fc" id="L85">        this.id = id;</span>
+<span class="fc" id="L86">        this.time = time;</span>
+<span class="fc" id="L87">        this.status = status;</span>
+<span class="fc" id="L88">        this.user = user;</span>
+<span class="fc" id="L89">        this.payment = payment;</span>
+<span class="fc" id="L90">        this.paid = paid;</span>
+<span class="fc" id="L91">        this.change = change;</span>
+<span class="fc" id="L92">        this.snacks = snacks;</span>
+<span class="fc" id="L93">    }</span>
+
+    /**
+     * Constructor for cancelled Transactions with id
+     * basically init and returned by methods in TransactionDB.java
+     * and used to print report
+     *
+     * @param id the id of the transaction
+     * @param time current system time
+     * @param status cancelled or valid
+     * @param user
+     * @param reason why the transaction is cancelled
+     */
+<span class="fc" id="L106">    public Transaction(int id, Timestamp time, String status, User user, String reason) {</span>
+<span class="fc" id="L107">        this.id = id;</span>
+<span class="fc" id="L108">        this.time = time;</span>
+<span class="fc" id="L109">        this.status = status;</span>
+<span class="fc" id="L110">        this.user = user;</span>
+<span class="fc" id="L111">        this.reason = reason;</span>
+<span class="fc" id="L112">    }</span>
+
+    /**
+     * function to get the string for a cancelled transaction
+     */
+   public String toStringCancelled() {
+       String s;
+<span class="fc bfc" id="L119" title="All 2 branches covered.">       if (!Integer.toString(user.getId()).equals(&quot;-1&quot;)) {</span>
+<span class="fc" id="L120">            s = Integer.toString(id) + &quot;,&quot; +</span>
+<span class="fc" id="L121">                    time.toString() + &quot;,&quot; +</span>
+<span class="fc" id="L122">                    Integer.toString(user.getId()) + &quot;,&quot; +</span>
+                    reason;
+       } else {
+<span class="fc" id="L125">            s = Integer.toString(id) + &quot;,&quot; +</span>
+<span class="fc" id="L126">                time.toString() + &quot;,&quot; +</span>
+                &quot;anonymous&quot; + &quot;,&quot; +
+                reason;
+       }
+<span class="fc" id="L130">       return s;</span>
+   }
+
+     /**
+      * function to get the string for a valid transaction
+      * only contains basic information
+      * to get the list of snack involved with thistransaction, needs to use method toStringSnacks()
+      */
+    public String toStringValid() {
+        String s;
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (!Integer.toString(user.getId()).equals(&quot;-1&quot;)) {</span>
+<span class="fc" id="L141">            s = Integer.toString(id) + &quot;,&quot; +</span>
+<span class="fc" id="L142">                        time.toString() + &quot;,&quot; +</span>
+<span class="fc" id="L143">                        Integer.toString(user.getId()) + &quot;,&quot; +</span>
+                        payment + &quot;,&quot; +
+<span class="fc" id="L145">                        Double.toString(paid) + &quot;,&quot; +</span>
+<span class="fc" id="L146">                        Double.toString(change);</span>
+        } else {
+<span class="fc" id="L148">            s = Integer.toString(id) + &quot;,&quot; +</span>
+<span class="fc" id="L149">                        time.toString() + &quot;,&quot; +</span>
+                        &quot;anonymous&quot; + &quot;,&quot; +
+                        payment + &quot;,&quot; +
+<span class="fc" id="L152">                        Double.toString(paid) + &quot;,&quot; +</span>
+<span class="fc" id="L153">                        Double.toString(change);</span>
+        }
+<span class="fc" id="L155">        return s;</span>
+    }
+
+     /**
+      * function to get the string of a list of snack invoived with this transaction
+      */
+    public String toStringSnacks() {
+<span class="fc" id="L162">        String s = &quot;&quot;;</span>
+
+<span class="fc bfc" id="L164" title="All 2 branches covered.">        for (Snack snack : snacks.keySet()){</span>
+<span class="fc" id="L165">          s = s + Integer.toString(snack.getCode()) + &quot;,&quot; + snack.getName() + &quot;,&quot; + snacks.get(snack) + &quot;\n&quot;;</span>
+<span class="fc" id="L166">        }</span>
+<span class="fc" id="L167">        return s;</span>
+    }
+
+     /**
+      * getter for basic info
+      */
+    public Timestamp getTime() {
+<span class="fc" id="L174">        return time;</span>
+    }
+
+    public int getid() {
+<span class="fc" id="L178">        return id;</span>
+    }
+
+    public User getUser() {
+<span class="fc" id="L182">        return user;</span>
+    }
+
+    public String getPayment() {
+<span class="fc" id="L186">        return payment;</span>
+    }
+
+    public String getStatus() {
+<span class="fc" id="L190">        return status;</span>
+    }
+
+    public String getReason() {
+<span class="fc" id="L194">        return reason;</span>
+    }
+
+    public double getPaid() {
+<span class="fc" id="L198">        return paid;</span>
+    }
+
+    public double getChange() {
+<span class="fc" id="L202">        return change;</span>
+    }
+
+    public HashMap&lt;Snack,String&gt; getSnacks() {
+<span class="fc" id="L206">        return snacks;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

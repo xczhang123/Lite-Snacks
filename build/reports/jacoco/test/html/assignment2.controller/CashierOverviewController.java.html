@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CashierOverviewController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment2</a> &gt; <a href="index.source.html" class="el_package">assignment2.controller</a> &gt; <span class="el_source">CashierOverviewController.java</span></div><h1>CashierOverviewController.java</h1><pre class="source lang-java linenums">package assignment2.controller;
+
+import assignment2.App;
+import assignment2.model.*;
+import assignment2.backend.*;
+
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
+
+<span class="nc" id="L18">public class CashierOverviewController {</span>
+
+    @FXML
+    private TableView&lt;Cash&gt; itemTable;
+    @FXML
+    private TableColumn&lt;Cash, String&gt; priceColumn;
+    @FXML
+    private TableColumn&lt;Cash, Integer&gt; quantityColumn;
+
+    @FXML
+    private Label priceLabel;
+    @FXML
+    private Label quantityLabel;
+
+    Cashier cashier;
+
+    public void setCashier(Cashier cashier) {
+<span class="nc" id="L35">        this.cashier = cashier;</span>
+<span class="nc" id="L36">    }</span>
+
+    /**
+     * Updates each Cell in the price column to add a dollar sign to the front
+     */
+    public static class PriceTableCell&lt;S&gt; extends TableCell&lt;Cash, String&gt; {
+
+<span class="nc" id="L43">        public PriceTableCell() {</span>
+<span class="nc" id="L44">            Label label = new Label(&quot;$&quot;);</span>
+<span class="nc" id="L45">            this.setAlignment(Pos.CENTER_LEFT);</span>
+<span class="nc" id="L46">            this.setGraphic(label);</span>
+<span class="nc" id="L47">        }</span>
+
+        @Override
+        protected void updateItem(String item, boolean empty) {
+<span class="nc" id="L51">            super.updateItem(item, empty);</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">            if (empty) {</span>
+<span class="nc" id="L53">                setGraphic(null);</span>
+            } else {
+<span class="nc" id="L55">                this.setText(item);</span>
+            }
+<span class="nc" id="L57">        }</span>
+    }
+
+    /**
+     * Initializes the controller class. This method is automatically called after
+     * the fxml file has been loaded.
+     */
+    @FXML
+    private void initialize() {
+        // Initialize the item table with the two columns.
+<span class="nc" id="L67">        priceColumn.setCellValueFactory(cellData -&gt; cellData.getValue().priceProperty());</span>
+<span class="nc" id="L68">        quantityColumn.setCellValueFactory(cellData -&gt; cellData.getValue().quantityProperty().asObject());</span>
+        // Adds dollar sign to price column
+<span class="nc" id="L70">        priceColumn.setCellFactory(price -&gt; new PriceTableCell&lt;&gt;());</span>
+
+        // Clear item details.
+<span class="nc" id="L73">        showItemDetails(null);</span>
+
+        // Listen for selection changes and show the item primary details when changed.
+<span class="nc" id="L76">        itemTable.getSelectionModel().selectedItemProperty()</span>
+<span class="nc" id="L77">                .addListener((observable, oldValue, newValue) -&gt; showItemDetails(newValue));</span>
+<span class="nc" id="L78">    }</span>
+
+     /**
+     * If the Edit button is clicked and a item is selected, redirect users to Edit Dialogue stage;
+     * otherwise, raise a warning
+     */
+    @FXML
+    void handleEditItem(ActionEvent event) {
+<span class="nc" id="L86">        Cash selectedItem = itemTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        if (selectedItem != null) {</span>
+<span class="nc" id="L88">            boolean okClicked = cashier.showItemEditDialog(selectedItem);</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">            if (okClicked) {</span>
+<span class="nc" id="L90">                showItemDetails(selectedItem);</span>
+            }
+
+<span class="nc" id="L93">        } else {</span>
+            // Nothing selected.
+<span class="nc" id="L95">            Alert alert = new Alert(AlertType.WARNING);</span>
+<span class="nc" id="L96">            alert.initOwner(App.getPrimaryStage());</span>
+<span class="nc" id="L97">            alert.setTitle(&quot;No Selection&quot;);</span>
+<span class="nc" id="L98">            alert.setHeaderText(&quot;No change Selected&quot;);</span>
+<span class="nc" id="L99">            alert.setContentText(&quot;Please select a change in the table.&quot;);</span>
+
+<span class="nc" id="L101">            alert.showAndWait();</span>
+        }
+<span class="nc" id="L103">    }</span>
+
+    /**
+     * Fills all text fields to show details about the item. If the specified
+     * item is null, all text fields are cleared.
+     *
+     * @param item the item or null
+     */
+    private void showItemDetails(Cash item) {
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (item != null) {</span>
+            // Fill the labels with info from the item object.
+<span class="nc" id="L114">            priceLabel.setText(&quot;$ &quot; + item.getPrice());</span>
+<span class="nc" id="L115">            quantityLabel.setText(Integer.toString(item.getQuantity()));</span>
+        } else {
+            // item is null, remove all the text.
+<span class="nc" id="L118">            priceLabel.setText(&quot;&quot;);</span>
+<span class="nc" id="L119">            quantityLabel.setText(&quot;&quot;);</span>
+        }
+<span class="nc" id="L121">    }</span>
+
+    /**
+     * Is called by the main application to give a reference back to itself.
+     *
+     * @param mainApp
+     */
+    public void setMainApp(ObservableList&lt;Cash&gt; items) {
+<span class="nc" id="L129">        itemTable.setItems(items);</span>
+<span class="nc" id="L130">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

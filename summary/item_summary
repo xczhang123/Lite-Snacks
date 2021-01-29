@@ -1,0 +1,17 @@
+code,name,category,quantity,price
+1001,Mineral Water,Drinks,15,3.6
+1002,Sprite,Drinks,15,4.8
+1003,Coca cola,Drinks,10,4.8
+1004,Pepsi,Drinks,15,4.8
+1005,Juice,Drinks,15,5.0
+1006,Mars,Chocolates,15,2.0
+1007,M&M,Chocolates,15,2.5
+1008,Bounty,Chocolates,14,3.0
+1009,Snickers,Chocolates,14,3.5
+1010,Smiths,Chips,15,3.0
+1011,Pringles,Chips,14,3.0
+1012,Kettle,Chips,15,3.0
+1013,Thins,Chips,15,3.0
+1014,Mentos,Candies,15,2.0
+1015,Sour Patch,Candies,14,2.0
+1016,Skittles,Candies,10,2.0

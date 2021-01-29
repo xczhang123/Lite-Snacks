@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerRecentController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment2</a> &gt; <a href="index.source.html" class="el_package">assignment2.controller</a> &gt; <span class="el_source">CustomerRecentController.java</span></div><h1>CustomerRecentController.java</h1><pre class="source lang-java linenums">package assignment2.controller;
+
+import java.util.List;
+
+import assignment2.App;
+import assignment2.model.*;
+import assignment2.backend.*;
+
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Stage;
+import javafx.scene.control.TextField;
+
+<span class="nc" id="L22">public class CustomerRecentController {</span>
+
+    @FXML
+    private Label nameone;
+
+    @FXML
+    private Label quantityone;
+
+    @FXML
+    private Label nametwo;
+
+    @FXML
+    private Label quantitytwo;
+
+    @FXML
+    private Label namethree;
+
+    @FXML
+    private Label quantitythree;
+
+    @FXML
+    private Label namefour;
+
+    @FXML
+    private Label quantityfour;
+
+    @FXML
+    private Label namefive;
+
+    @FXML
+    private Label quantityfive;
+    Customer customer;
+    private Stage dialogStage;
+
+    public void setCustomer(Customer customer) {
+<span class="nc" id="L57">        this.customer = customer;</span>
+<span class="nc" id="L58">    }</span>
+    @FXML
+    void handleOk(ActionEvent event) {
+<span class="nc" id="L61">        this.customer.timer_reset();</span>
+<span class="nc" id="L62">        dialogStage.close();</span>
+<span class="nc" id="L63">    }</span>
+
+     /**
+     * Sets the stage of this dialog.
+     *
+     * @param dialogStage
+     */
+    public void setDialogStage(Stage dialogStage) {
+<span class="nc" id="L71">        this.dialogStage = dialogStage;</span>
+
+<span class="nc" id="L73">        List&lt;Snack&gt; snacks = SnackDB.getRecent(customer.getUser().getId());</span>
+
+<span class="nc" id="L75">        nameone.setText(&quot;None&quot;);</span>
+<span class="nc" id="L76">        quantityone.setText(&quot;None&quot;);</span>
+<span class="nc" id="L77">        nametwo.setText(&quot;None&quot;);</span>
+<span class="nc" id="L78">        quantitytwo.setText(&quot;None&quot;);</span>
+<span class="nc" id="L79">        namethree.setText(&quot;None&quot;);</span>
+<span class="nc" id="L80">        quantitythree.setText(&quot;None&quot;);</span>
+<span class="nc" id="L81">        namefour.setText(&quot;None&quot;);</span>
+<span class="nc" id="L82">        quantityfour.setText(&quot;None&quot;);</span>
+<span class="nc" id="L83">        namefive.setText(&quot;None&quot;);</span>
+<span class="nc" id="L84">        quantityfive.setText(&quot;None&quot;);</span>
+        
+<span class="nc bnc" id="L86" title="All 6 branches missed.">        switch (snacks.size()) {</span>
+            case 5:
+<span class="nc" id="L88">                namefive.setText(snacks.get(4).getName());</span>
+<span class="nc" id="L89">                quantityfive.setText(String.valueOf(snacks.get(4).getQuantity()));</span>
+            case 4:
+<span class="nc" id="L91">                namefour.setText(snacks.get(3).getName());</span>
+<span class="nc" id="L92">                quantityfour.setText(String.valueOf(snacks.get(3).getQuantity()));</span>
+            case 3:
+<span class="nc" id="L94">                namethree.setText(snacks.get(2).getName());</span>
+<span class="nc" id="L95">                quantitythree.setText(String.valueOf(snacks.get(2).getQuantity()));</span>
+            case 2:
+<span class="nc" id="L97">                nametwo.setText(snacks.get(1).getName());</span>
+<span class="nc" id="L98">                quantitytwo.setText(String.valueOf(snacks.get(1).getQuantity()));</span>
+            case 1:
+<span class="nc" id="L100">                nameone.setText(snacks.get(0).getName());</span>
+<span class="nc" id="L101">                quantityone.setText(String.valueOf(snacks.get(0).getQuantity()));           </span>
+        }
+<span class="nc" id="L103">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
